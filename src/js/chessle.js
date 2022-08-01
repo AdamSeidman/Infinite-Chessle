@@ -74,9 +74,9 @@ const GUESS_BOX_SIZE_TO_FONT_SIZE = {
 
 let SERVER_URL_GET = 'https://d1vwq1uqg5c4bn.cloudfront.net/';
 let SERVER_URL = 'https://d2jwxtulzwxhxh.cloudfront.net/';
-if (location.hostname === '') {
-    SERVER_URL_GET = SERVER_URL = 'http://localhost:9334/';
-}
+//if (location.hostname === '') {
+//    SERVER_URL_GET = SERVER_URL = 'http://localhost:9334/';
+//}
 
 let difficulty = 'e';
 let date;
@@ -133,13 +133,13 @@ function getAnsLength() {
 }
 
 function updateLocalStorage() {
-    localStorage.setItem('date', date);
-    localStorage.setItem('chessleNum', chessleNum);
-    localStorage.setItem('ans', JSON.stringify(ans));
-    localStorage.setItem('prevGuesses', JSON.stringify(prevGuesses));
-    localStorage.setItem('prevResults', JSON.stringify(prevResults));
-    localStorage.setItem('difficulty', difficulty);
-    localStorage.setItem('isGameOver', isGameOver);
+    //localStorage.setItem('date', date);
+    //localStorage.setItem('chessleNum', chessleNum);
+    //localStorage.setItem('ans', JSON.stringify(ans));
+    //localStorage.setItem('prevGuesses', JSON.stringify(prevGuesses));
+    //localStorage.setItem('prevResults', JSON.stringify(prevResults));
+    //localStorage.setItem('difficulty', difficulty);
+    //localStorage.setItem('isGameOver', isGameOver);
 }
 
 function gameOver(isWin) {
@@ -631,6 +631,7 @@ function initializeBoard() {
 }
 
 
+console.log(allChessOpenings) // TODO remove
 
 function setUp() {
     if (localStorage.getItem('userId') == undefined) {
@@ -646,6 +647,7 @@ function setUp() {
         openMaintenanceModal();
         return;
     }
+    /*
     if (date !== localStorage.getItem('date')) {
         localStorage.setItem('prevGuesses', '[]');
         localStorage.setItem('prevResults', '[]');
@@ -664,7 +666,10 @@ function setUp() {
         } else {
             setUpAnswer();
         }
-    }
+    }*/
+
+    setUpAnswer(); // TODO I added
+
     addSponsorText();
 }
 
