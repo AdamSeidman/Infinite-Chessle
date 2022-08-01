@@ -2006,9 +2006,9 @@ for (i = 0; i < allChessOpenings.length; i++) {
     if (allChessOpenings[i].moves.length < 10) {
         while (allChessOpenings[i].moves.length < 10) {
             if (allChessOpenings[i].moves.length % 2 === 0) {
-                allChessOpenings[i].moves.push("h3")
+                allChessOpenings[i].moves.push("Ke3")
             } else {
-                allChessOpenings[i].moves.push("h6")
+                allChessOpenings[i].moves.push("Ke7")
             }
         }
     }
