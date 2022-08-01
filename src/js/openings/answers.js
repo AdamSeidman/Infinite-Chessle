@@ -1997,18 +1997,19 @@ let allChessOpenings = [
     }
 ]
 
-let iiiii = 0 // TODO remove
-
 for (i = 0; i < allChessOpenings.length; i++) {
     allChessOpenings[i].name_normal = allChessOpenings[i].name_expert
     allChessOpenings[i].date = "1999-02-22"
     allChessOpenings[i].num = -1
-    allChessOpenings[i].chessable_link = "about:blank" // TODO
+    allChessOpenings[i].chessable_link = "file:///C:/Users/Adam/Documents/+%20Chessle-Infinite/src/index.html" // TODO
     allChessOpenings[i].moves = allChessOpenings[i].moves.split(" ")
-    //console.log(allChessOpenings[i].moves)
     if (allChessOpenings[i].moves.length < 10) {
-        iiiii++ // TODO
+        while (allChessOpenings[i].moves.length < 10) {
+            if (allChessOpenings[i].moves.length % 2 === 0) {
+                allChessOpenings[i].moves.push("h3")
+            } else {
+                allChessOpenings[i].moves.push("h6")
+            }
+        }
     }
 }
-
-console.log(iiiii)
