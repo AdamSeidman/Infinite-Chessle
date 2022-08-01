@@ -105,6 +105,7 @@ function submitGuess() {
     }
 
     // Check guess
+    console.log(ans) // TODO remove
     let result = check(guess, ans);
     prevGuesses.push(guess);
     prevResults.push(result);
@@ -215,6 +216,11 @@ function fillPrevCorrect() {
             board.position(game.fen());
             populateGuessBoxes();
         }
+    } else {
+        let prevCorrectGuesses = ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6']
+        game.load_pgn(prevCorrectGuesses.join(' '), {sloppy: true});
+        board.position(game.fen());
+        populateGuessBoxes();
     }
 }
 
@@ -230,6 +236,8 @@ function createSharePasta() {
     let lastGuess = prevResults[prevResults.length - 1];
     let tries = lastGuess.every(val => val === 'g') ? prevResults.length : 'X';
 
+    let pasta = `Chessle Infinite - ${tries} Guesses\n\n${createEmojiPattern('\n')}\n`;
+    /*
     let pasta = 'Chessle '
         + chessleNum
         + ' ('
@@ -238,7 +246,7 @@ function createSharePasta() {
         + tries
         + '/' + MAX_GUESSES + '\n\n'
         + createEmojiPattern('\n') + '\n'
-        + 'https://jackli.gg/chessle';
+        + 'https://jackli.gg/chessle';*/
     let shareData = {
         text: pasta
     };
@@ -458,7 +466,7 @@ function openShareModal(text) {
         ${createPgnFromMoveList(ans)}
         <br />
         ${difficulty === 'e' ? ansNameExpert : ansNameNormal}
-        <br />
+        <!--br />
         <br />
         Learn more about this opening on <a href="${chessableLink}" target="_blank" onclick="logOutboundClick('${chessableLink}');"><b>Chessable</b></a>
         </p>
@@ -466,7 +474,7 @@ function openShareModal(text) {
         <p class="share-modal-answer">
         <br />
         Chessle resets at 12am PST every day!
-        </p>
+        </p-->
     `;
     $('#shareModalBody').html(modalBody);
     $('#chessableLearnMoreButton').attr('href', chessableLink);
@@ -505,7 +513,7 @@ function addSponsorText() {
 // HTTP requests
 
 function getAnswer() {
-    let xhttp = new XMLHttpRequest();
+    /*let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             let res = JSON.parse(xhttp.responseText);
@@ -518,7 +526,16 @@ function getAnswer() {
         }
     };
     xhttp.open('GET', SERVER_URL_GET, false);
-    xhttp.send();
+    xhttp.send();*/
+
+   // let res = JSON.parse(xhttp.responseText);
+   let res = allChessOpenings[Math.floor(Math.random() * allChessOpenings.length)]
+    date = res.date;
+    chessleNum = res.num;
+    ansNameNormal = res.name_normal;
+    ansNameExpert = res.name_expert;
+    fullAns = res.moves;
+    chessableLink = res.chessable_link;
 }
 
 function sendResult(isWin) {
@@ -533,6 +550,7 @@ function sendResult(isWin) {
         'date': date
     });
 
+    /*
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             let res = JSON.parse(xhttp.responseText);
@@ -547,7 +565,7 @@ function sendResult(isWin) {
         }
     };
     xhttp.open('POST', SERVER_URL, true);
-    xhttp.send(body);
+    xhttp.send(body);*/
 }
 
 function logOutboundClick(link) {
@@ -629,9 +647,6 @@ function initializeBoard() {
     };
     board = Chessboard('myBoard', config);
 }
-
-
-console.log(allChessOpenings) // TODO remove
 
 function setUp() {
     if (localStorage.getItem('userId') == undefined) {
