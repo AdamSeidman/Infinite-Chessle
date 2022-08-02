@@ -1,5 +1,5 @@
 # Infinite Chessle
-** Inspired by Jack Li's Original [Project](https://jackli.gg/chessle) **
+**Inspired by Jack Li's Original [Project](https://jackli.gg/chessle)**
 
 See the game here: (https://seidman-ad.am/Infinite-Chessle)
 
