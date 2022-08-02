@@ -1,4 +1,4 @@
-[
+let allChessOpenings = [
     {
         "name_expert": "Nimzovich-Larsen Attack",
         "moves": [
