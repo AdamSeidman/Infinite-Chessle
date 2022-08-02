@@ -2013,7 +2013,7 @@ for (i = 0; i < allChessOpenings.length; i++) {
     allChessOpenings[i].name_normal = allChessOpenings[i].name_expert
     allChessOpenings[i].date = "1999-02-22"
     allChessOpenings[i].num = -1
-    allChessOpenings[i].chessable_link = "file:///C:/Users/Adam/Documents/+%20Chessle-Infinite/src/index.html" // TODO
+    allChessOpenings[i].chessable_link = "https://AdamSeidman.github.io/Infinite-Chessle"
     //allChessOpenings[i].moves = allChessOpenings[i].moves.split(" ")
 
     if (allChessOpenings[i].moves.length < 10) {
