@@ -1997,31 +1997,34 @@ let allChessOpenings = [
     }
 ]
 
+let answerSet = []
+
+for (i = 0; i < allChessOpenings.length; i++) {
+    let moveSet = allChessOpenings[i].moves
+    let parsedMoves = moveSet.split(" ")
+    if (parsedMoves.length >= 10) {
+        answerSet.push(moveSet)
+    }
+    allChessOpenings[i].moves = parsedMoves
+    allChessOpenings[i].moveSet = moveSet
+}
+
 for (i = 0; i < allChessOpenings.length; i++) {
     allChessOpenings[i].name_normal = allChessOpenings[i].name_expert
     allChessOpenings[i].date = "1999-02-22"
     allChessOpenings[i].num = -1
     allChessOpenings[i].chessable_link = "file:///C:/Users/Adam/Documents/+%20Chessle-Infinite/src/index.html" // TODO
-    allChessOpenings[i].moves = allChessOpenings[i].moves.split(" ")
-    let i2 = false
-    let i7 = false // TODO actually implement stuff
+    //allChessOpenings[i].moves = allChessOpenings[i].moves.split(" ")
+
     if (allChessOpenings[i].moves.length < 10) {
-        while (allChessOpenings[i].moves.length < 10) {
-            if (allChessOpenings[i].moves.length % 2 === 0) {
-                if (i2) {
-                    allChessOpenings[i].moves.push("Ke1")
-                } else {
-                    allChessOpenings[i].moves.push("Ke2")
-                }
-                i2 = !i2
-            } else {
-                if (i7) {
-                    allChessOpenings[i].moves.push("Ke8")
-                } else {
-                    allChessOpenings[i].moves.push("Ke7")
-                }
-                i7 = !i7
-            }
+        let moveSet = millionbase.find(item => {
+            return (item.startsWith(allChessOpenings[i].moveSet) && !answerSet.includes(item))
+        })
+        if (moveSet === undefined) {
+            alert("Fatal Error")
         }
+        answerSet.push(moveSet)
+        allChessOpenings[i].moveSet = moveSet
+        allChessOpenings[i].moves = moveSet.split(" ")
     }
 }
