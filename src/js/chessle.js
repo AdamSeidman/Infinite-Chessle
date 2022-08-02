@@ -1,4 +1,4 @@
-const MAX_GUESSES = 6;
+const MAX_GUESSES = 50;
 
 const LIGHT_BOX = 'bg-dark';
 const BLACK_BOX = 'text-white bg-secondary';

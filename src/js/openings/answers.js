@@ -2003,12 +2003,24 @@ for (i = 0; i < allChessOpenings.length; i++) {
     allChessOpenings[i].num = -1
     allChessOpenings[i].chessable_link = "file:///C:/Users/Adam/Documents/+%20Chessle-Infinite/src/index.html" // TODO
     allChessOpenings[i].moves = allChessOpenings[i].moves.split(" ")
+    let i2 = false
+    let i7 = false // TODO actually implement stuff
     if (allChessOpenings[i].moves.length < 10) {
         while (allChessOpenings[i].moves.length < 10) {
             if (allChessOpenings[i].moves.length % 2 === 0) {
-                allChessOpenings[i].moves.push("Ke3")
+                if (i2) {
+                    allChessOpenings[i].moves.push("Ke1")
+                } else {
+                    allChessOpenings[i].moves.push("Ke2")
+                }
+                i2 = !i2
             } else {
-                allChessOpenings[i].moves.push("Ke7")
+                if (i7) {
+                    allChessOpenings[i].moves.push("Ke8")
+                } else {
+                    allChessOpenings[i].moves.push("Ke7")
+                }
+                i7 = !i7
             }
         }
     }
