@@ -519,8 +519,8 @@ function getAnswer() {
             let res = JSON.parse(xhttp.responseText);
             date = res.date;
             chessleNum = res.num;
-            ansNameNormal = res.name_normal;
-            ansNameExpert = res.name_expert;
+            ansNameNormal = res.name;
+            ansNameExpert = res.name;
             fullAns = res.moves;
             chessableLink = res.chessable_link;
         }
@@ -532,8 +532,8 @@ function getAnswer() {
    let res = allChessOpenings[Math.floor(Math.random() * allChessOpenings.length)]
     date = res.date;
     chessleNum = res.num;
-    ansNameNormal = res.name_normal;
-    ansNameExpert = res.name_expert;
+    ansNameNormal = res.name;
+    ansNameExpert = res.name;
     fullAns = res.moves;
     chessableLink = res.chessable_link;
 }
