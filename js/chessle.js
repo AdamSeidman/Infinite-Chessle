@@ -569,6 +569,7 @@ function sendResult(isWin) {
 }
 
 function logOutboundClick(link) {
+    /*
     let xhttp = new XMLHttpRequest();
     let body = JSON.stringify({
         'userId': userId,
@@ -576,7 +577,8 @@ function logOutboundClick(link) {
         'link': link
     });
     xhttp.open('POST', SERVER_URL + 'outbound_click', true);
-    xhttp.send(body);
+    xhttp.send(body);*/
+    location.reload(); // TODO something better
 }
 
 
