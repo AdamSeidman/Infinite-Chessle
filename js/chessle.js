@@ -5,26 +5,18 @@ const BLACK_BOX = 'text-white bg-secondary';
 const YELLOW_BOX = 'text-white bg-warning';
 const GREEN_BOX = 'text-white bg-success';
 
-const DIFFICULTY_NAME_MAP = {
-    'n': 'Normal',
-    'e': 'Expert'
-};
-
 const RESULT_TO_BOX_MAP = {
     'g': GREEN_BOX,
     'y': YELLOW_BOX,
     'b': BLACK_BOX
 };
 
+const ANS_LENGTH = 10;
+
 const RESULT_TO_EMOJI_MAP = {
     'g': '🟩',
     'y': '🟨',
     'b': '⬛'
-};
-
-const DIFFICULTY_TO_LENGTH_MAP = {
-    'n': 6,
-    'e': 10
 };
 
 const GUESS_BOX_SIZE_TO_FONT_WEIGHT = {
@@ -72,19 +64,11 @@ const GUESS_BOX_SIZE_TO_FONT_SIZE = {
     }
 };
 
-let SERVER_URL_GET = 'https://d1vwq1uqg5c4bn.cloudfront.net/';
-let SERVER_URL = 'https://d2jwxtulzwxhxh.cloudfront.net/';
-//if (location.hostname === '') {
-//    SERVER_URL_GET = SERVER_URL = 'http://localhost:9334/';
-//}
-
-let difficulty = 'e';
 let date;
 let chessleNum;
-let ansNameNormal;
-let ansNameExpert;
 let fullAns;
 let ans;
+let ansName;
 let chessableLink;
 let userId;
 
@@ -99,17 +83,15 @@ let avgTries;
 function submitGuess() {
     let guess = game.history();
     // Error if not all the boxes are filled up
-    if (guess.length < getAnsLength()) {
+    if (guess.length < ANS_LENGTH()) {
         createAlert('errorBox', 'errorArea', 'Fill up all the moves first!', 'danger');
         return;
     }
 
     // Check guess
-    console.log(ans) // TODO remove
     let result = check(guess, ans);
     prevGuesses.push(guess);
     prevResults.push(result);
-    updateLocalStorage();
 
     // Add guess and result to new row
     addPrevGuessHtml(guess, result);
@@ -129,20 +111,6 @@ function submitGuess() {
     resetBoard();
 }
 
-function getAnsLength() {
-    return DIFFICULTY_TO_LENGTH_MAP[difficulty];
-}
-
-function updateLocalStorage() {
-    //localStorage.setItem('date', date);
-    //localStorage.setItem('chessleNum', chessleNum);
-    //localStorage.setItem('ans', JSON.stringify(ans));
-    //localStorage.setItem('prevGuesses', JSON.stringify(prevGuesses));
-    //localStorage.setItem('prevResults', JSON.stringify(prevResults));
-    //localStorage.setItem('difficulty', difficulty);
-    //localStorage.setItem('isGameOver', isGameOver);
-}
-
 function gameOver(isWin) {
     // Get rid of the now unnecessary buttons
     document.getElementById('currentGuess').style.display = 'none';
@@ -152,24 +120,17 @@ function gameOver(isWin) {
     document.getElementById('fillButton').style.display = 'none';
     isGameOver = true;
     localStorage.setItem('isWin', isWin);
-    updateLocalStorage();
-
-    sendResult(isWin);
 
     // Show endgame modal
-    if (date === '2022-04-01') {
-        openShareModal('April Fools!');
+    if (isWin) {
+        openShareModal('Congrats, you won!');
     } else {
-        if (isWin) {
-            openShareModal('Congrats, you won!');
-        } else {
-            openShareModal('Nice try!');
-        }
+        openShareModal('Nice try!');
     }
 }
 
 function check(guess, answer) {
-    if (guess.length !== getAnsLength() || answer.length !== getAnsLength()) {
+    if (guess.length !== ANS_LENGTH() || answer.length !== ANS_LENGTH()) {
         let err = 'Something went seriously wrong, try refreshing the page';
         createAlert('errorBox', 'errorArea', err, 'danger');
         return;
@@ -224,7 +185,7 @@ function fillPrevCorrect() {
     }
 }
 
-function createEmojiPattern(separator) {
+function createEmojiPattern(separator) { // TODO remove?
     let pattern = ''
     for (let i = 0; i < prevResults.length; i++) {
         pattern += prevResults[i].map(res => RESULT_TO_EMOJI_MAP[res]).join('') + separator;
@@ -237,16 +198,7 @@ function createSharePasta() {
     let tries = lastGuess.every(val => val === 'g') ? prevResults.length : 'X';
 
     let pasta = `Chessle Infinite - ${tries} Guesses\n\n${createEmojiPattern('\n')}\n`;
-    /*
-    let pasta = 'Chessle '
-        + chessleNum
-        + ' ('
-        + DIFFICULTY_NAME_MAP[difficulty]
-        + ') '
-        + tries
-        + '/' + MAX_GUESSES + '\n\n'
-        + createEmojiPattern('\n') + '\n'
-        + 'https://jackli.gg/chessle';*/
+
     let shareData = {
         text: pasta
     };
@@ -261,7 +213,6 @@ function createSharePasta() {
         createAlert('alertBox', 'alertArea', 'Copied 👍', 'primary');
     }
 }
-
 
 // HTML
 
@@ -282,23 +233,14 @@ function createAlert(id, parent, text, style) {
 function getGuessBoxSize() {
     let windowWidth = window.innerWidth;
     let windowHeight = window.innerHeight;
-    if (difficulty === 'e') {
-        if (windowWidth > 1200 && windowHeight > 1000) {
-            return 'large';
-        } else if (windowWidth > 1000 && windowHeight > 800) {
-            return 'medium';
-        } else if (windowWidth > 770) {
-            return 'small';
-        }
-        return 'tiny';
-    } else {
-        if (windowWidth > 770 && windowHeight > 800) {
-            return 'large';
-        } else if (windowWidth > 500) {
-            return 'medium';
-        }
+    if (windowWidth > 1200 && windowHeight > 1000) {
+        return 'large';
+    } else if (windowWidth > 1000 && windowHeight > 800) {
+        return 'medium';
+    } else if (windowWidth > 770) {
         return 'small';
     }
+    return 'tiny';
 }
 
 function createLabelCss(guessBoxSize) {
@@ -367,7 +309,7 @@ function populateGuessBoxes() {
     let moves = game.history();
     let guessBoxSize = getGuessBoxSize();
     let guessHtml = '';
-    for (let i = 0; i < getAnsLength(); i++) {
+    for (let i = 0; i < ANS_LENGTH(); i++) {
         if (i % 2 === 0) {
             guessHtml += '<div class="move-group">' + createLabelHtml(i, guessBoxSize);
         }
@@ -381,13 +323,9 @@ function populateGuessBoxes() {
     $('#currentGuess').html(guessHtml);
 }
 
-function chooseMode(chosenDifficulty) {
-    difficulty = chosenDifficulty;
-    setUpAnswer();
-}
-
 function setUpAnswer() {
-    ans = fullAns.slice(0, getAnsLength());
+    ans = fullAns.slice(0, ANS_LENGTH());
+    console.log(ans)
     populateGuessBoxes();
     $('#instructionsModal').modal('hide');
 }
@@ -465,10 +403,10 @@ function openShareModal(text) {
         <br />
         ${createPgnFromMoveList(ans)}
         <br />
-        ${difficulty === 'e' ? ansNameExpert : ansNameNormal}
+        ${ansName}
         <!--br />
         <br />
-        Learn more about this opening on <a href="${chessableLink}" target="_blank" onclick="logOutboundClick('${chessableLink}');"><b>Chessable</b></a>
+        Learn more about this opening on <a href="${chessableLink}" target="_blank" onclick="location.reload();"><b>Chessable</b></a>
         </p>
         <p id="share-modal-stats" class="share-modal-answer"></p>
         <p class="share-modal-answer">
@@ -479,108 +417,19 @@ function openShareModal(text) {
     $('#shareModalBody').html(modalBody);
     $('#chessableLearnMoreButton').attr('href', chessableLink);
     $('#chessableLearnMoreButton').click(function() {
-        logOutboundClick(chessableLink);
+        location.reload();
     });
     $('#shareModal').modal('show');
 }
 
-function addSponsorText() {
-    let sponsorHtml = `
-        Sponsored by 
-        <a href="https://www.chessable.com/?utm_source=chessle&utm_medium=partner" target="_blank">
-            <img src="img/chessable.png" alt="Chessable"
-                onclick="logOutboundClick('https://www.chessable.com/?utm_source=chessle&utm_medium=partner');">
-        </a>
-    `;
-    let curDate = new Date();
-    let promoStartDate = new Date(Date.UTC(2022, 2, 29, 23));
-    let promoEndDate = new Date(Date.UTC(2022, 3, 1, 23));
-    if (curDate > promoStartDate && curDate < promoEndDate) {
-        sponsorHtml = `
-            <a href="https://go.chessable.com/chessle-deals/?utm_source=chessle&utm_medium=partner&utm_campaign=72_hr_sale"
-                    target="_blank">
-                <img src="img/chessable_sale.jpg" alt="Chessable"
-                    onclick="logOutboundClick('https://go.chessable.com/chessle-deals/?utm_source=chessle&utm_medium=partner&utm_campaign=72_hr_sale');">
-            </a>
-        `;
-        $('#titleSponsor').removeClass('navbar-title-sponsor');
-        $('#titleSponsor').addClass('navbar-title-sponsor-sale');
-    }
-    $('#titleSponsor').html(sponsorHtml);
-}
-
-
-// HTTP requests
-
 function getAnswer() {
-    /*let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            let res = JSON.parse(xhttp.responseText);
-            date = res.date;
-            chessleNum = res.num;
-            ansNameNormal = res.name;
-            ansNameExpert = res.name;
-            fullAns = res.moves;
-            chessableLink = res.chessable_link;
-        }
-    };
-    xhttp.open('GET', SERVER_URL_GET, false);
-    xhttp.send();*/
-
-   // let res = JSON.parse(xhttp.responseText);
    let res = allChessOpenings[Math.floor(Math.random() * allChessOpenings.length)]
     date = res.date;
     chessleNum = res.num;
-    ansNameNormal = res.name;
-    ansNameExpert = res.name;
+    ansName = res.name;
     fullAns = res.moves;
     chessableLink = res.chessable_link;
 }
-
-function sendResult(isWin) {
-    let xhttp = new XMLHttpRequest();
-    let body = JSON.stringify({
-        'userId': userId,
-        'prevGuesses': prevGuesses,
-        'prevResults': prevResults,
-        'isWin': isWin,
-        'difficulty': difficulty,
-        'ans': ans,
-        'date': date
-    });
-
-    /*
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            let res = JSON.parse(xhttp.responseText);
-            percentCorrect = res.percent_correct;
-            avgTries = res.avg_tries;
-            $('#share-modal-stats').html(`
-                <br />
-                Today, ${percentCorrect}% of people got ${DIFFICULTY_NAME_MAP[difficulty]} mode correct.
-                <br />
-                Of the people who got it correct, it took ${avgTries} tries on average.
-                <br />`);
-        }
-    };
-    xhttp.open('POST', SERVER_URL, true);
-    xhttp.send(body);*/
-}
-
-function logOutboundClick(link) {
-    /*
-    let xhttp = new XMLHttpRequest();
-    let body = JSON.stringify({
-        'userId': userId,
-        'date': date,
-        'link': link
-    });
-    xhttp.open('POST', SERVER_URL + 'outbound_click', true);
-    xhttp.send(body);*/
-    location.reload(); // TODO something better
-}
-
 
 // Chessboard
 
@@ -588,7 +437,7 @@ let board = null;
 let game = new Chess();
 
 function onDragStart(source, piece, position, orientation) {
-    if (game.history().length >= getAnsLength()) return false;
+    if (game.history().length >= ANS_LENGTH()) return false;
     if (game.game_over() || isGameOver) return false;
 
     if ((game.turn() === 'w' && piece.search(/^b/) !== -1)
@@ -664,30 +513,8 @@ function setUp() {
         openMaintenanceModal();
         return;
     }
-    /*
-    if (date !== localStorage.getItem('date')) {
-        localStorage.setItem('prevGuesses', '[]');
-        localStorage.setItem('prevResults', '[]');
-        localStorage.setItem('isGameOver', false);
-        openInstructionsModal();
-    } else {
-        prevGuesses = JSON.parse(localStorage.getItem('prevGuesses'));
-        prevResults = JSON.parse(localStorage.getItem('prevResults'));
-        difficulty = localStorage.getItem('difficulty');
-        for (let i = 0; i < prevGuesses.length; i++) {
-            addPrevGuessHtml(prevGuesses[i], prevResults[i]);
-        }
-        if (localStorage.getItem('isGameOver') === 'true') {
-            ans = JSON.parse(localStorage.getItem('ans'));
-            gameOver(localStorage.getItem('isWin') === 'true');
-        } else {
-            setUpAnswer();
-        }
-    }*/
 
-    setUpAnswer(); // TODO I added
-
-    addSponsorText();
+    setUpAnswer();
 }
 
 $(document).on("keydown", function (e) {
