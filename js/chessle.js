@@ -160,6 +160,33 @@ function check(guess, answer) {
     return result;
 }
 
+let guessableMoves = {
+    "Sicillian Defense: Four Knights Variation": [
+        'e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6'
+    ],
+    "Common Guesses (Submits 4)": [
+        ['e4', 'e5', 'c3', 'c6', 'd3', 'd6', 'a3', 'a6', 'f3', 'f6'],
+        ['d4', 'd5', 'c4', 'c5', 'e3', 'e6', 'f4', 'f5', 'a4', 'a5'],
+        ['Nf3', 'Nf6', 'g3', 'g6', 'Bg2', 'Bg6', 'g4', 'g5', 'h4', 'h5'],
+        ['Nc3', 'Nc6', 'b3', 'b6', 'Bb2', 'Bb6', 'b4', 'b4', 'h3', 'h6']
+    ],
+    "King's Indian Defense: Four Pawns Attack": [
+        'd4', 'Nf6', 'c4', 'g3', 'Nc3', 'Bg2', 'e4', 'd6', 'f4', 'O-O'
+    ],
+    "Caro-Kann Defense: Classical Variation": [
+        'e4', 'c6', 'd4', 'd5', 'Nc3', 'dxe4', 'Nxe4', 'Bf5', 'Ng3', 'Bg6'
+    ],
+    "King's Pawn Opening: The Bongcloud": [
+        'e4', 'e5', 'Ke2', 'Ke7', 'Ke1', 'Ke8', 'Ke2', 'Ke7', 'Ke1', 'Ke8'
+    ],
+    "Center Pawns + f Knights": [
+        'd4', 'Nf6', 'c4', 'd5', 'Nf3', 'c5', 'e4', 'e5', 'f4', 'f5'
+    ],
+    "French Defense: Advance, Paulsen Attack": [
+        'e4', 'e6', 'd4', 'd5', 'e5', 'c5', 'c3', 'Nc6', 'Nf3', 'Qb6'
+    ]
+}
+
 function fillPrevCorrect() {
     if (prevResults.length > 0) {
         let mostRecentResult = prevResults[prevResults.length - 1];
@@ -178,7 +205,7 @@ function fillPrevCorrect() {
             populateGuessBoxes();
         }
     } else {
-        let prevCorrectGuesses = ['e4', 'c5', 'Nf3', 'e6', 'd4', 'cxd4', 'Nxd4', 'Nf6', 'Nc3', 'Nc6']
+        let prevCorrectGuesses = guessableMoves["Sicillian Defense: Four Knights Variation"] // TODO add button and simplify
         game.load_pgn(prevCorrectGuesses.join(' '), {sloppy: true});
         board.position(game.fen());
         populateGuessBoxes();
